@@ -231,6 +231,9 @@ class KeyboardUI extends HTMLElement {
 		if (!rect) return;
 		const { state } = this;
 		const { selected } = state;
+		console.log("selected:")
+
+		console.log(selected)
 		const blackKeyColor = 'black';
 		const whiteKeyColor = 'white';
 		const keyOnColor = 'grey';
@@ -243,14 +246,20 @@ class KeyboardUI extends HTMLElement {
 		const keyOnStyle = { fill: keyOnColor, strokeWidth: 1, stroke: 'black' };
 		/** @type {CSSStyleDeclaration} */
 		const selectedStyle = { fill: selectedColor, strokeWidth: 1, stroke: 'black' };
-		const keyOn = +!!this.state.keys[$key];
+		let keyOn = +!!this.state.keys[$key];
+
+		// @FIX MB: this is a hack to make sure the selected key is not grey when released
+		if(!state.selected) keyOn = false;
+
 		if (this.isBlack($key)) {
 			const style = $key === selected ? selectedStyle : keyOn ? keyOnStyle : blackStyle;
 			for (const s in style) {
 				rect.style[s] = style[s];
 			}
 		} else {
-			const style = $key === selected ? selectedStyle : keyOn ? keyOnStyle : whiteStyle;
+			// white key
+			const style = ($key === selected) ? selectedStyle : keyOn ? keyOnStyle : whiteStyle;
+			console.log("style !!!"); console.log(style);
 			for (const s in style) {
 				rect.style[s] = style[s];
 			}

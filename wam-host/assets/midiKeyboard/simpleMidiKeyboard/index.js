@@ -61,15 +61,19 @@ export default class KeyboardPlugin extends WebAudioModule {
 		// define midi event emitter
 		keyboard.onMidi = (bytes) => this.audioNode?._wamNode.emitEvents({ type: 'wam-midi', time: this.audioContext.currentTime, data: { bytes } });
 		
+		
 		// also listen to midi input for highlighting keys
 		this.audioNode?._wamNode.addEventListener('wam-midi', (e) => {
-			console.log("KEYBOARD A RECU" + e);
 			// MB : Quentin teste ici combien il faut enlever pour que si tu joues
 			// C4 sur le clavier midi ça joue la bonne note sur le clavier virtuel
-			const key = e.detail.data.bytes[0] - 50;
-			const velocity = e.detail.data.bytes[1];
-			keyboard.onKeyTriggered(key, velocity, undefined)
+			const key = e.detail.data.bytes[1];
+			const velocity = e.detail.data.bytes[2];
+			console.log("KEYBOARD A RECU key=" + key + " velocity=" + velocity);
+			console.log(e.detail.data.bytes)
+
+			keyboard.onKeyTriggered(key, velocity, true)
 		});
+		
 		return keyboard;
 	}
 }
