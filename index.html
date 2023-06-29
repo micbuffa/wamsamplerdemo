@@ -1,0 +1,92 @@
+<html lang="en">
+<head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Simple host that loads a non bundled plugin</title>
+        <script type="module" src="./wam-host/wamHost.js"></script>
+        <script type="module" src="./wam-plugin/wamPlugin.js"></script>
+        <script>WebAudioControlsOptions = {
+                useMidi:1,
+                preserveMidiLearn:1,
+              }</script>
+                  <script src="https://pixijs.download/release/pixi.js"></script>
+
+</head>
+
+<body>  <!-- 
+        <main>
+                <div id="mount"></div>
+        </main>
+        
+        <script type="module" src="host.js"></script>
+        -->
+        <button id="start">Start</button>
+        <br>
+        Tempo :  <input id="tempo-display-input" value="120">
+        <p></p>
+        <wam-host id="host">
+                        <wam-plugin id="pianoroll" src="./pianoroll_dist/index.js"></wam-plugin>
+               
+                <wam-plugin src="./src/index.js"></wam-plugin>
+                <!-- <wam-plugin src="../../packages/faustPingPongDelay/plugin/index.js"></wam-plugin> -->
+        </wam-host> 
+
+        <br></br>
+            <div id="midiTrack"></div>
+            <script>
+                
+               
+
+                let btnStart = document.querySelector("#start");
+
+                btnStart.onclick = async () => {
+                        let host = document.querySelector("#host")
+                        
+                        let audioCtx = host.audioContext;
+
+                        if (btnStart.textContent === "Stop") {
+                                // On arrête le piano roll
+                                let inputTempo = document.querySelector("#tempo-display-input");
+                                let pianoRollWC = document.querySelector("#pianoroll");
+                                let instance = pianoRollWC.instance;
+
+                                instance.audioNode.scheduleEvents({
+                                        type: 'wam-transport', 
+                                        data: {
+                                                playing: false,
+                                                timeSigDenominator: 4,
+                                                timeSigNumerator: 4,
+                                                currentBar: 0,
+                                                currentBarStarted: audioCtx.currentTime,
+                                                tempo: inputTempo.value
+                                        }
+                                })
+                                btnStart.textContent = "Start";
+                         } else {
+                                // we start
+                                btnStart.textContent = "Stop";
+
+                                let pianoRollWC = document.querySelector("#pianoroll");
+                                console.log("Pianoroll instance :")
+                                let instance = pianoRollWC.instance;
+                                console.log(instance);
+                                console.log(await instance.sequencer.getState());
+
+                                let inputTempo = document.querySelector("#tempo-display-input");
+
+                                instance.audioNode.scheduleEvents({
+                                        type: 'wam-transport', 
+                                        data: {
+                                                playing: true,
+                                                timeSigDenominator: 4,
+                                                timeSigNumerator: 4,
+                                                currentBar: 0,
+                                                currentBarStarted: audioCtx.currentTime,
+                                                tempo: inputTempo.value
+                                        }
+                                })
+                        }
+
+                }
+            </script>
+</body>

@@ -1,0 +1,18 @@
+{
+    "identifier": "com.wimmics.sampler",
+    "name": "Wimmics Sampler",
+    "vendor": "Wimmics",
+    "description": "Sampler written in native WebAudio nodes",
+    "version": "1.0.0",
+    "apiVersion": "2.0.0",
+    "sdkVersion": "1.0.0",
+    "thumbnail": "sampler.png",
+    "keywords": ["sampler", "midi"],
+    "isInstrument": true,
+    "website": "",
+    "hasMidiInput": true,
+    "hasMidiOutput": false,
+    "hasAudioInput": false,
+    "hasAudioOutput": true
+}
+
